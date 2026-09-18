@@ -1,2 +1,4 @@
 -- auto run changes on update
-require("main")
+print("AUTORUNNING")
+
+require(settings.get("ghu.base") .. "ext/Aerodynamax/cc-cool-screen/main")
