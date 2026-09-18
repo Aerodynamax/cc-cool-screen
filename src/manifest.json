@@ -4,7 +4,7 @@
     "libs/dev_env.lua": "9ba33c47900bad67c46bc54245e6d5c010fa37f350a682a666f28d0dddf95e58",
     "libs/screen.lua": "3d51e18007e8f1607cccdc02edf5737e8882bc29e8991132e875b438200b1b1b",
     "main.lua": "3100188806845d3eeff3666f3ecff797e54ae441df9cc7a6fff54b980ffaff92",
-    "autoruns/startup.lua": "1087393c39fed56e92b268bf3374193add7ee3ad076cb308de50141f6ceab6d8"
+    "autoruns/startup.lua": "574a781771cbd3fe5cb63cb85cf92be0406756822d6fe78913376054f67039ca"
   },
   "dependencies": []
 }
