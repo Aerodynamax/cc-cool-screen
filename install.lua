@@ -1,8 +1,8 @@
 -- tweak for your repo
-local installRepo = ""
-local ref = "" -- leave blank for master
-local repoPath = "" -- leave blank for /src
-local minified = nil -- wheter or not to force your install to be minified
+local installRepo = "Aerodynamax/cc-cool-screen"
+local ref = "main"      -- leave blank for master
+local repoPath = "/src" -- leave blank for /src
+local minified = true   -- wheter or not to force your install to be minified
 -- `nil` = use cc-updater global (defaults to true)
 -- `true` = force this repo only to be minified (other repos still use global)
 -- `false` = force this repo only to not be minified (other repos still use global)

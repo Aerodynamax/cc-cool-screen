@@ -1,10 +1,10 @@
 -- TODO: remove this for prod
-require("libs.dev_env")
+require("src.libs.dev_env")
 
 -- table reducing
-require("libs.reduce")
+require("src.libs.reduce")
 
-local screen = require("libs.screen")
+local screen = require("src.libs.screen")
 
 -- ---@type inventory|Peripheral
 -- local storage = peripheral.find("chest")

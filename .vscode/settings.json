@@ -43,4 +43,9 @@
         "_"
     ],
     "Lua.runtime.version": "Lua 5.1",
+    "Lua.workspace.library": [
+        "~/Documents/coding/lua/CC-Tweaked-EmmyLua"
+    ],
+    "Lua.codeLens.enable": true,
+    "Lua.completion.showWord": "Disable",
 }

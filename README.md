@@ -1,3 +1,3 @@
-# ComputerCraft Updater Template
+# cc: cool screen thingo
 
-See the [parent repo](https://github.com/AngellusMortis/cc-updater) for more details.
+This repo looks like this because it's using [cc-updater](https://github.com/AngellusMortis/cc-updater).
