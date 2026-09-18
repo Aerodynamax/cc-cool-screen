@@ -1,0 +1,1 @@
+require("src.libs.dev_env")require("src.libs.reduce")local a=require("src.libs.screen")a.reset()a.clear()a.setTextScale(5)a.writeCenter("Welcome!",colors.white,colors.blue," ")a.flush()a.setCursorPos(1,2)a.setCursorBlink(false)
