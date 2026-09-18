@@ -1,5 +1,6 @@
 {
   "files": {
+    "startup/startup.lua": "3b389d7f8f8234aa1dcd1d59027567b570db4d22fdf06de3bd80bc0bf7ca0a14",
     "libs/reduce.lua": "b1ff818a69a7b57421bf56dca804f0f381d1848580263514e075cd7ee4161eec",
     "libs/dev_env.lua": "9ba33c47900bad67c46bc54245e6d5c010fa37f350a682a666f28d0dddf95e58",
     "libs/screen.lua": "3d51e18007e8f1607cccdc02edf5737e8882bc29e8991132e875b438200b1b1b",
