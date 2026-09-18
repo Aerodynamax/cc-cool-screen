@@ -9,28 +9,40 @@ local monitor = peripheral.find("monitor")
 local screen = monitor
 
 
--- screen.centerOffset = {
---     x = screen.width / 2,
---     y = screen.height / 2,
--- }
-
 --- Writes a piece of text to the center of the screen
---- @param text string
----@param colorFg number
----@param colorBg number
---- @return nil
-function screen.write_center(text, colorFg, colorBg)
+--- @param text string the text being printed
+--- @param colorFg number foreground color, use `colors.*` for it
+--- @param colorBg number background color, use `colors.*` for it
+--- @param padSidesWith? string A 1 char thing that will be added to both sides of the text so the color fills the whole row, leave out to not do means it won't do that
+function screen.writeCenter(text, colorFg, colorBg, padSidesWith)
     local x, y = screen.getCursorPos()
     local width, height = monitor.getSize()
-    screen.setCursorPos(math.floor((width - #text) / 2) + 1, y)
 
+    -- since the text will overrite it anyway
+    if padSidesWith ~= nil then
+        -- get only first char
+        padSidesWith = string.sub(padSidesWith, 1, 2)
+        screen.setCursorPos(1, y)
+
+        screen.writeColor(
+            string.rep(padSidesWith, width),
+            colorFg,
+            colorBg
+        )
+
+        -- add spaces to both sides of text so it has a gap between padding and text
+        text = " " .. text .. " "
+    end
+
+
+    screen.setCursorPos(math.floor((width - #text) / 2) + 1, y)
     screen.writeColor(text, colorFg, colorBg)
 end
 
 --- Write the specified text to the screen
----@param text string the text being printed
----@param colorFg number foreground color.  Use `colors.*` for it.
----@param colorBg number background color.  Use `colors.*` for it.
+--- @param text string the text being printed
+--- @param colorFg number foreground color, use `colors.*` for it
+--- @param colorBg number background color, use `colors.*` for it
 function screen.writeColor(text, colorFg, colorBg)
     screen.blit(
         text,
@@ -39,9 +51,12 @@ function screen.writeColor(text, colorFg, colorBg)
     )
 end
 
---- Clears the screen and resets the cursor pos
+--- Resets the color & cursor pos & scale of the screen.  <br>**DOES NOT CLEAR THE SCREEN.**
 function screen.reset()
-    screen.clear()
+    -- screen.clear()
+    screen.setBackgroundColor(colors.black)
+    screen.setTextColor(colors.white)
+    screen.setTextScale(1)
     screen.setCursorPos(1, 1)
 end
 

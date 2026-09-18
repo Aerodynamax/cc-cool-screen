@@ -10,11 +10,11 @@ local screen = require("libs.screen")
 -- local storage = peripheral.find("chest")
 
 screen.reset()
+screen.clear()
 screen.setTextScale(5)
-screen.write_center("Welcome!", colors.black, colors.blue)
+screen.writeCenter("Welcome!", colors.white, colors.blue, " ")
 screen.flush()
 
--- screen.setTextScale(1)
 screen.setCursorPos(1, 2)
 screen.setCursorBlink(false)
 -- screen.flush()
