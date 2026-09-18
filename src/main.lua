@@ -1,10 +1,13 @@
--- TODO: remove this for prod
-require("src.libs.dev_env")
+require(settings.get("ghu.base") .. "core/apis/ghu")
+
+
+-- for dev (currently not working :sob:)
+require("dev_env")
 
 -- table reducing
-require("src.libs.reduce")
+require("reduce")
 
-local screen = require("src.libs.screen")
+local screen = require("screen")
 
 -- ---@type inventory|Peripheral
 -- local storage = peripheral.find("chest")
