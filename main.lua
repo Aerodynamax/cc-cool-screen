@@ -5,12 +5,13 @@ require("libs.dev_env")
 require("libs.reduce")
 
 local screen = require("libs.screen")
--- storage = peripheral.find("chest")
--- print(screen.write_center())
+
+-- ---@type inventory|Peripheral
+-- local storage = peripheral.find("chest")
 
 screen.reset()
 screen.setTextScale(5)
-screen.write_center("Welcome!")
+screen.write_center("Welcome!", colors.black, colors.blue)
 screen.flush()
 
 -- screen.setTextScale(1)
