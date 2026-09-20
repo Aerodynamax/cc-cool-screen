@@ -2,12 +2,12 @@ require(settings.get("ghu.base") .. "core/apis/ghu")
 
 
 -- for dev (currently not working :sob:)
-require("dev_env")
+require("sc.dev_env")
 
 -- table reducing
-require("reduce")
+require("sc.reduce")
 
-local screen = require("screen")
+local screen = require("sc.screen")
 
 -- ---@type inventory|Peripheral
 -- local storage = peripheral.find("chest")

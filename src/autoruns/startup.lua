@@ -1,5 +1,6 @@
 -- auto run changes on update
 
+---@type table
 local ghu = require(settings.get("ghu.base") .. "core/apis/ghu")
 
 ---@type string

@@ -1,7 +1,3 @@
---- Add typing to monitor
-
--- require("0.peripheral.monitor")
-
 ---@type Monitor | Peripheral
 local monitor = peripheral.find("monitor")
 

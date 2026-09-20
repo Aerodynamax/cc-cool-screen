@@ -1,12 +1,18 @@
 {
 	"folders": [
 		{
-			"path": "."
+			"path": "./"
 		},
 		{
 			"name": "CraftOS",
 			"uri": "craftos-pc://0/"
 		}
 	],
-	"settings": {}
+	"settings": {},
+	"workspace.ignoreDir": [
+		"**/node_modules",
+		"**/.git",
+		"**/Desktop",
+		"**/Documents"
+	]
 }
