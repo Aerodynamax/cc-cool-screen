@@ -11,8 +11,11 @@ local storage = chest
 function storage.totalCount()
     local count = 0
 
-    for idx = 1, #storage.size() do
-        count = count + storage.getItemDetail(1).count
+    for idx = 1, storage.size() do
+        local item = storage.getItemDetail(idx)
+        if item ~= nil then
+            count = count + item.count
+        end
     end
 
     return count
