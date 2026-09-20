@@ -1,7 +1,7 @@
 {
   "files": {
     "apis/sc/reduce.lua": "35b2560b14e54ee06b5c074058cb8e8da7bfbddac1bd46fbb359c28306ad7def",
-    "apis/sc/storage.lua": "5608ca756e2be0c3b875f3ece4bc629328bd01a0fc53eec6a0ef52e7bc3bebcc",
+    "apis/sc/storage.lua": "a8b06a189420f5323bd66d88b7b4d7514cc2c95458f30feb42b224b8c6062a57",
     "apis/sc/screen.lua": "ebb1325d32bcb97a1f56c06b5774e530e1b9ab4a7d3ac2328747d4d80e7e79de",
     "autorun/startup.lua": "acaf1d8867955d4ee58c57d3cc73621f316f20d4542bbecd14f316082be9c355",
     "programs/cccs.lua": "088bb4d86191f1178ad882a553fbea567a141a3cab385df800da23e761589ce3"
