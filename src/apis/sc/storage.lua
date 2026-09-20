@@ -3,7 +3,7 @@ require("sc.reduce")
 
 
 ---@type inventory|Peripheral
-local chest = peripheral.find("chest")
+local chest = peripheral.find("inventory")
 
 ---@class Storage: inventory
 local storage = chest
