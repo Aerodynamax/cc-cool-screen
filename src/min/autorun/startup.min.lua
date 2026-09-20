@@ -1,1 +1,1 @@
-shell.openTab("cccs")
+shell.run("cccs")
