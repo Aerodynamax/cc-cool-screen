@@ -9,6 +9,7 @@ if periphemu ~= nil then
 end
 
 -- setup path
+-- direct rip from ghu so i can use stuff in dev env
 local function addShellPath(dir)
     local path = dir
     local shellPath = shell.path()
@@ -40,5 +41,14 @@ local function addShellPath(dir)
     end
     shell.setPath(shellPath)
 end
+local function addModulePath(dir)
+    local modulePath = package.path
+    local basePath = ";" .. dir
+    modulePath = modulePath .. basePath .. "apis/?"
+    modulePath = modulePath .. basePath .. "apis/?.lua"
+    modulePath = modulePath .. basePath .. "apis/?/init.lua"
+    package.path = modulePath
+end
 
-addShellPath("src/")
+addShellPath("/src/")
+addModulePath("/src/")

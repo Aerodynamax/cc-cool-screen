@@ -1,3 +1,4 @@
 -- auto run changes on update
-shell.openTab("cccs")
--- shell.run("cc-cs")
+-- require(settings.get("ghu.base") .. "core/apis/ghu")
+
+shell.run("cccs")

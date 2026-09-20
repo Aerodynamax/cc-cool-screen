@@ -2,8 +2,10 @@
 require(settings.get("ghu.base") .. "core/apis/ghu")
 
 
--- for dev (currently not working :sob:)
-require("sc.dev_env")
+-- for dev
+if fs.exists("dev_env.lua") then
+    require("dev_env")
+end
 
 -- table reducing
 require("sc.reduce")
