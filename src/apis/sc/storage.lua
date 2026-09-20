@@ -1,5 +1,5 @@
 -- add reduce function
-require("sc.reduce")
+-- require("sc.reduce")
 
 
 ---@type inventory|Peripheral
@@ -9,13 +9,13 @@ local chest = peripheral.find("inventory")
 local storage = chest
 
 function storage.totalCount()
-    return table.reduce(
-        storage.list(),
-        function(accumulated, itemInfo)
-            return accumulated + itemInfo.count
-        end,
-        0
-    )
+    local count = 0
+
+    for idx = 1, #storage.size() do
+        count = count + storage.getItemDetail(1).count
+    end
+
+    return count
 end
 
 return storage
