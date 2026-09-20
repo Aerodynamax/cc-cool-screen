@@ -1,1 +1,1 @@
-require(settings.get("ghu.base").."core/apis/ghu")require("dev_env")require("reduce")local a=require("screen")a.reset()a.clear()a.setTextScale(5)a.writeCenter("Welcome!",colors.white,colors.blue," ")a.flush()a.setCursorPos(1,2)a.setCursorBlink(false)
+require(settings.get("ghu.base").."core/apis/ghu")require("sc.dev_env")require("sc.reduce")local a=require("sc.screen")a.reset()a.clear()a.setTextScale(5)a.writeCenter("Welcome!",colors.white,colors.blue," ")a.flush()a.setCursorPos(1,2)a.setCursorBlink(false)
