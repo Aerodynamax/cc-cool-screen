@@ -35,6 +35,19 @@ function screen.writeCenter(text, colorFg, colorBg, padSidesWith)
     screen.writeColor(text, colorFg, colorBg)
 end
 
+--- Writes a piece of text to the center of the screen
+--- @param text string the text being printed
+--- @param y integer the y position of the text
+--- @param colorFg number foreground color, use `colors.*` for it
+--- @param colorBg number background color, use `colors.*` for it
+function screen.writeRight(text, y, colorFg, colorBg)
+    local width, height = monitor.getSize()
+
+    screen.setCursorPos(width - #text, y)
+
+    screen.writeColor(text, colorFg, colorBg)
+end
+
 --- Write the specified text to the screen
 --- @param text string the text being printed
 --- @param colorFg number foreground color, use `colors.*` for it

@@ -7,22 +7,25 @@ if fs.exists("dev_env.lua") then
     require("dev_env")
 end
 
--- table reducing
-require("sc.reduce")
+print("starting up ...")
 
 local screen = require("sc.screen")
 
 screen.reset()
 screen.clear()
-screen.setTextScale(5)
-screen.writeCenter("Welcome!", colors.white, colors.blue, " ")
+-- screen.setTextScale(5)
+screen.writeCenter("screen", colors.white, colors.blue, " ")
 screen.flush()
 screen.reset()
 
-screen.setCursorPos(1, 2)
-
+print("started!")
 
 local storage = require("sc.storage")
-local count = storage.totalCount()
 
-screen.write("storage: " .. count)
+while true do
+    screen.writeRight("" .. os.date("%a %H:%M:%S"), 1, colors.white, colors.blue)
+    screen.reset()
+
+    screen.setCursorPos(1, 3)
+    screen.write("storage: " .. storage.totalCount())
+end
