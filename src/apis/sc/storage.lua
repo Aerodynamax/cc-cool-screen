@@ -36,13 +36,12 @@ print("[storage] indexing ...")
 local list = storage.list()
 
 for i = 1, #list do
-    local details = storage.getItemDetail(i)
+    local successful, details = pcall(storage.getItemDetail, i)
 
     -- add if we haven't already
-    if details == nil then
-        print("empty")
+    if details == nil or not successful then
         storage.freeSpace = storage.freeSpace + 64
-    elseif not storage.itemTypes[details.name] then
+    elseif successful and not storage.itemTypes[details.name] then
         table.insert(storage.itemTypes, {
             details.name,
             details.displayName,
