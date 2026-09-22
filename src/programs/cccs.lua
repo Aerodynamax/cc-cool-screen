@@ -19,11 +19,9 @@ screen.writeCenter("screen", colors.white, colors.blue, " ")
 screen.setCursorPos(1, 3)
 screen.writeColor("indexing storage ...", colors.white, colors.black)
 screen.setCursorPos(1, 4)
-screen.writeColor(" (this may take some time)", colors.gray, colors.black)
+screen.writeColor(" (this may take some time ...)", colors.gray, colors.black)
 screen.flush()
 screen.reset()
-
-print("started!")
 
 local storage = require("sc.storage")
 
@@ -33,6 +31,7 @@ screen.clearLine()
 screen.flush()
 screen.reset()
 
+print("started!")
 
 while true do
     screen.writeRight("" .. os.date("%a %H:%M:%S"), 1, colors.white, colors.blue)

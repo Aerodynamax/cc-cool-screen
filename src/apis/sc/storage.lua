@@ -1,7 +1,3 @@
--- add reduce function
--- require("sc.reduce")
-
-
 ---@type ccTweaked.peripherals.Inventory|any
 local chest = peripheral.find("inventory")
 
@@ -25,10 +21,6 @@ storage.itemTypes = {}
 ---@type integer
 storage.freeSpace = 0
 
-
--- ---@type { string: boolean|nil }
--- storage.itemNames = {}
-
 -- TODO: update item catalogue as we get more stuff
 print("[storage] indexing ...")
 
@@ -36,6 +28,8 @@ print("[storage] indexing ...")
 local list = storage.list()
 
 for i = 1, #list do
+    os.pullEvent() -- allow keyboard interupts
+
     local successful, details = pcall(storage.getItemDetail, i)
 
     -- add if we haven't already
