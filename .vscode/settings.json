@@ -40,11 +40,12 @@
         "_CC_DEFAULT_SETTINGS",
         "_HOST",
         "_VERSION",
-        "_"
+        "_",
+        "require"
     ],
     "Lua.runtime.version": "Lua 5.1",
     "Lua.workspace.library": [
-        "~/Documents/coding/lua/CC-Tweaked-EmmyLua"
+        "~/Documents/coding/lua/cc-tweaked-documentation"
     ],
     "Lua.codeLens.enable": true,
     "Lua.completion.showWord": "Disable",

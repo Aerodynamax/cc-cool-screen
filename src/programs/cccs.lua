@@ -27,5 +27,5 @@ while true do
     screen.reset()
 
     screen.setCursorPos(1, 3)
-    screen.write("storage: " .. storage.totalCount())
+    screen.write("storage: " .. storage.count() .. "/" .. storage.maxCount() .. " (" .. (storage.percentage()) .. "%)")
 end
