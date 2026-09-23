@@ -89,8 +89,13 @@ function storage.maxCount()
             if storage.itemTypes[item.name] then
                 count = count + storage.itemTypes[item.name].maxCount
             else
-                count = count + (storage.getItemDetail(i).maxCount or storage.index.defaultMaxCount)
-                sleep(0) -- yield
+                success, details = pcall(storage.getItemDetail, i) -- safely get details
+                if success then
+                    count = count + details.maxCount
+                else
+                    count = count + storage.index.defaultMaxCount -- fallback
+                end
+                sleep(0)                                          -- yield
             end
         else
             count = count + storage.index.defaultMaxCount
