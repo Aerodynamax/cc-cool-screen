@@ -43,7 +43,7 @@
         "_",
         "require"
     ],
-    "Lua.runtime.version": "Lua 5.1",
+    "Lua.runtime.version": "Lua 5.2",
     "Lua.workspace.library": [
         "~/Documents/coding/lua/cc-tweaked-documentation"
     ],

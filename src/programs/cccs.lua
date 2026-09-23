@@ -25,50 +25,81 @@ if storage == nil then
     screen.writeCenter("ERROR: no storage found", colors.red)
 end
 
-screen.setCursorPos(1, 3)
+screen.setCursorLine(screen.height())
 screen.writeColor("indexing storage ...", colors.white, colors.black)
-screen.setCursorPos(1, 4)
 screen.writeColor(" (this may take some time ...)", colors.gray, colors.black)
 screen.flush()
 screen.reset()
 
-sleep(3)
+function index()
+    if not storage then
+        return
+    end
 
-if storage then
     parallel.waitForAll(
         storage.index.index,
         function()
             while not storage.index.isIndexed do
                 sleep(0)
-                screen.setCursorPos(1, 3)
+                screen.setCursorLine(screen.height())
                 screen.clearLine()
                 screen.write(storage.index.latestLog[#storage.index.latestLog])
             end
         end
     )
+
+    screen.setCursorLine(screen.height())
+    screen.clearLine()
 end
 
 --#endregion
 
 
 
--- remove the (this might take some time) disclaimer
-screen.setCursorPos(1, 4)
-screen.clearLine()
 screen.flush()
 screen.reset()
 
 print("started!")
 
-while true do
-    screen.writeRight("" .. os.date("%a %H:%M:%S"), 1, colors.white, colors.blue)
-    screen.reset()
+function mainloop()
+    parallel.waitForAll(
+        function()
+            while true do
+                screen.writeRight("" .. os.date("%a %H:%M:%S"), 1, colors.white, colors.blue)
+                sleep(0)
+            end
+        end,
+        function()
+            if not storage then
+                return
+            end
 
-    screen.setCursorPos(1, 3)
-    if storage then
-        screen.write("storage: " ..
-            storage.count() .. "/" .. storage.maxCount() .. " (" .. (storage.percentage()) .. "%)")
-    end
+            -- do indexing
+            index()
 
-    sleep(0)
+            while true do
+                sleep(0) -- yield
+                screen.setCursorLine(3)
+                screen.write(
+                    "storage: " ..
+                    storage.count() .. "/" .. storage.maxCount() .. " (" .. (storage.percentage()) .. "%)"
+                )
+            end
+        end
+    )
 end
+
+-- continuously index
+parallel.waitForAny(
+    mainloop,
+    function()
+        if not storage then error("No storage") end
+
+        -- continuous indexing
+        while true do
+            storage.index.index()
+
+            sleep(5)
+        end
+    end
+)

@@ -9,6 +9,25 @@ end
 ---@class Screen: ccTweaked.peripherals.Monitor
 local screen = monitor
 
+--- Returns the current screen width.
+---@return integer
+function screen.width()
+    width, height = screen.getSize()
+    return width
+end
+
+--- Returns the current screen height.
+---@return integer
+function screen.height()
+    width, height = screen.getSize()
+    return height
+end
+
+--- Go to the specified line.  X pos is set to `1`.
+---@param y integer The line you want to go to
+function screen.setCursorLine(y)
+    screen.setCursorPos(1, y)
+end
 
 --- Writes a piece of text to the center of the screen.
 --- @param text string the text being printed
@@ -23,7 +42,7 @@ function screen.writeCenter(text, colorFg, colorBg, padSidesWith)
     if padSidesWith ~= nil then
         -- get only first char
         padSidesWith = string.sub(padSidesWith, 1, 2)
-        screen.setCursorPos(1, y)
+        screen.setCursorLine(y)
 
         screen.writeColor(
             string.rep(padSidesWith, width),

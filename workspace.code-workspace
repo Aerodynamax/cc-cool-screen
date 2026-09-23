@@ -13,7 +13,6 @@
 		"Lua.workspace.ignoreDir": [
 			".vscode",
 			"*min*",
-			"craftos-pc://2/*",
 		],
 	},
 	"workspace.ignoreDir": [
