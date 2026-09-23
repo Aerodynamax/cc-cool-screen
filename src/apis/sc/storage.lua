@@ -1,8 +1,8 @@
 ---@type ccTweaked.peripherals.Inventory|any
 local chest = peripheral.find("inventory")
 
-if not peripheral.hasType(chest, "inventory") then
-    return
+if not chest or not peripheral.hasType(chest, "inventory") then
+    return nil
 end
 
 ---@class Storage: ccTweaked.peripherals.Inventory
@@ -18,41 +18,50 @@ local storage = chest
 ---@type { string: ItemDetails }
 storage.itemTypes = {}
 
----@type integer
-storage.freeSpace = 0
+---@class StorageIndex Functions and values relating to storage indexing (a list of all types of items for fast maxCount lookups & stuff).
+storage.index = {}
 
--- TODO: update item catalogue as we get more stuff
-print("[storage] indexing ...")
+---@type integer The default max stack size of an item the indexer hasn't indexed
+storage.index.defaultMaxCount = 64
+
+---@type boolean Whether the storage system has been indexed.  If it is false, you need to run storage.index.index()
+storage.index.isIndexed = false
+
+---@type string[]
+storage.index.latestLog = {}
 
 -- get item maxes & names
-local list = storage.list()
+function storage.index.index()
+    storage.index.isIndexed = false
+    table.insert(storage.index.latestLog, "starting indexing ...")
 
-for i = 1, #list do
-    os.pullEvent() -- allow keyboard interupts
+    local list = storage.list()
 
-    local successful, details = pcall(storage.getItemDetail, i)
+    for i, item in pairs(list) do
+        -- only update new values
+        if item and not storage.itemTypes[item.name] then
+            local successful, details = pcall(storage.getItemDetail, i)
 
-    -- add if we haven't already
-    if details == nil or not successful then
-        storage.freeSpace = storage.freeSpace + 64
-    elseif successful and not storage.itemTypes[details.name] then
-        table.insert(storage.itemTypes, {
-            details.name,
-            details.displayName,
-            details.maxCount
-        })
+            if successful and details then
+                table.insert(storage.itemTypes, {
+                    details.name,
+                    details.displayName,
+                    details.maxCount
+                })
+            end
+
+            -- sleep is only required if we run getItemDetail because it peripheral calls take 1 tick to do
+            sleep(0) -- allow keyboard interupts
+        end
+
+        table.insert(storage.index.latestLog, "indexing: " .. (i / #list) * 100 .. "%")
     end
 
-    if i % 10 == 1 then
-        print("[storage] indexing: " .. (i / #list) * 100 .. "%")
-    end
+    storage.index.isIndexed = true
+    table.insert(storage.index.latestLog, "indexing completed.")
 end
 
--- add the end bit that wasn't traversed
-storage.freeSpace = storage.freeSpace + (storage.size() - #list) * 64
-
 print("[storage] indexing complete.")
-print("[storage] free space: " .. storage.freeSpace)
 
 --#endregion
 
@@ -78,11 +87,12 @@ function storage.maxCount()
 
     for i, item in pairs(storage.list()) do
         if item ~= nil then
-            maxToAdd = 64
+            -- if fast lookups are available, use them
             if storage.itemTypes[item.name] then
-                maxToAdd = storage.itemTypes[item.name]
+                count = count + storage.itemTypes[item.name]
+            else
+                count = count + (storage.getItemDetail(i).maxCount or storage.index.defaultMaxCount)
             end
-            count = count + maxToAdd -- too slow: storage.getItemLimit(i)
         end
     end
 

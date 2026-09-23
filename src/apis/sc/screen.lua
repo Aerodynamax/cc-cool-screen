@@ -12,8 +12,8 @@ local screen = monitor
 
 --- Writes a piece of text to the center of the screen.
 --- @param text string the text being printed
---- @param colorFg number foreground color, use `colors.*` for it
---- @param colorBg number background color, use `colors.*` for it
+--- @param colorFg? number foreground color, use `colors.*` for it
+--- @param colorBg? number background color, use `colors.*` for it
 --- @param padSidesWith? string A 1 char thing that will be added to both sides of the text so the color fills the whole row, leave out to not do means it won't do that
 function screen.writeCenter(text, colorFg, colorBg, padSidesWith)
     local x, y = screen.getCursorPos()
@@ -27,8 +27,8 @@ function screen.writeCenter(text, colorFg, colorBg, padSidesWith)
 
         screen.writeColor(
             string.rep(padSidesWith, width),
-            colorFg,
-            colorBg
+            colorFg or colors.white,
+            colorBg or colors.black
         )
 
         -- add spaces to both sides of text so it has a gap between padding and text
@@ -37,7 +37,7 @@ function screen.writeCenter(text, colorFg, colorBg, padSidesWith)
 
 
     screen.setCursorPos(math.floor((width - #text) / 2) + 1, y)
-    screen.writeColor(text, colorFg, colorBg)
+    screen.writeColor(text, colorFg or colors.white, colorBg or colors.black)
 end
 
 --- Writes a piece of text to the right of the screen.
