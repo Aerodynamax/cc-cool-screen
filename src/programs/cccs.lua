@@ -78,12 +78,13 @@ function mainloop()
             index()
 
             while true do
-                sleep(0) -- yield
-                screen.setCursorLine(3)
-                screen.write(
-                    "storage: " ..
-                    storage.count() .. "/" .. storage.maxCount() .. " (" .. (storage.percentage()) .. "%)"
+                screen.writeLeft(
+                    "storage: " .. storage.count() .. "/" .. storage.maxCount() .. " (" .. (storage.percentage()) .. "%)",
+                    3,
+                    colors.white,
+                    colors.black
                 )
+                sleep(0) -- yield
             end
         end
     )

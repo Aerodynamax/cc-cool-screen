@@ -72,6 +72,19 @@ function screen.writeRight(text, y, colorFg, colorBg)
     screen.writeColor(text, colorFg, colorBg)
 end
 
+--- Writes a piece of text to the left of the screen.
+--- @param text string the text being printed
+--- @param y integer the y position of the text
+--- @param colorFg number foreground color, use `colors.*` for it
+--- @param colorBg number background color, use `colors.*` for it
+function screen.writeLeft(text, y, colorFg, colorBg)
+    local width, height = monitor.getSize()
+
+    screen.setCursorPos(1, y)
+
+    screen.writeColor(text, colorFg, colorBg)
+end
+
 --- Write the specified text to the screen.
 --- @param text string the text being printed
 --- @param colorFg number foreground color, use `colors.*` for it
@@ -89,7 +102,7 @@ function screen.reset()
     -- screen.clear()
     screen.setBackgroundColor(colors.black)
     screen.setTextColor(colors.white)
-    screen.setTextScale(1)
+    screen.setTextScale(2)
     screen.setCursorPos(1, 1)
 end
 
