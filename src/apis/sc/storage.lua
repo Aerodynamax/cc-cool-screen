@@ -27,13 +27,13 @@ storage.index.defaultMaxCount = 64
 ---@type boolean Whether the storage system has been indexed.  If it is false, you need to run storage.index.index()
 storage.index.isIndexed = false
 
----@type string[]
+---@type string[] The log of the most recent indexing attempt.  Reset when calling `storage.index.index()`
 storage.index.latestLog = {}
 
 -- get item maxes & names
 function storage.index.index()
     storage.index.isIndexed = false
-    table.insert(storage.index.latestLog, "starting indexing ...")
+    storage.index.latestLog = { "starting indexing ..." }
 
     local list = storage.list()
 

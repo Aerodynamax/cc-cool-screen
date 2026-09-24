@@ -97,6 +97,16 @@ function screen.writeColor(text, colorFg, colorBg)
     )
 end
 
+--- Clears the specified line, filling it with the current background color.  <br><br>
+--- **WARNING: This will change the current cursor line.**
+---@param y? number The line to clear.  If empty, clears the current line.
+function screen.clearLineY(y)
+    if y then
+        screen.setCursorLine(y)
+    end
+    monitor.clearLine()
+end
+
 --- Resets the color & cursor pos & scale of the screen.  <br>**DOES NOT CLEAR THE SCREEN.**
 function screen.reset()
     -- screen.clear()

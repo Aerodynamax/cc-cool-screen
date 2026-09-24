@@ -40,16 +40,15 @@ function index()
         storage.index.index,
         function()
             while not storage.index.isIndexed do
-                sleep(0)
-                screen.setCursorLine(screen.height())
-                screen.clearLine()
+                screen.clearLineY(screen.height())
                 screen.write(storage.index.latestLog[#storage.index.latestLog])
+                sleep(0)
             end
         end
     )
-
-    screen.setCursorLine(screen.height())
-    screen.clearLine()
+    sleep(0)
+    screen.reset()
+    screen.clearLineY(screen.height())
 end
 
 --#endregion
@@ -96,11 +95,17 @@ parallel.waitForAny(
     function()
         if not storage then error("No storage") end
 
+        sleep(0) -- wait for it to start
+        -- wait for initial displayed indexing to happen
+        while not storage.index.isIndexed do
+            print("waiting ...")
+            sleep(1)
+        end
+
         -- continuous indexing
         while true do
-            storage.index.index()
-
             sleep(5)
+            storage.index.index()
         end
     end
 )
