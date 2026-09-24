@@ -30,10 +30,22 @@ storage.index.isIndexed = false
 ---@type string[] The log of the most recent indexing attempt.  Reset when calling `storage.index.index()`
 storage.index.latestLog = {}
 
+--- Returns the number of unique item types the indexer has stored.
+---@return integer -- the number of unique item types the indexer has stored
+function storage.index.itemTypesCount()
+    local count = 0
+    for _ in pairs(storage.itemTypes) do
+        count = count + 1
+    end
+    return count
+end
+
 -- get item maxes & names
 function storage.index.index()
     storage.index.isIndexed = false
     storage.index.latestLog = { "starting indexing ..." }
+
+    local initialItemTypes = storage.index.itemTypesCount()
 
     local list = storage.list()
 
@@ -57,8 +69,70 @@ function storage.index.index()
         table.insert(storage.index.latestLog, "indexing: " .. math.floor((i / #list) * 100) .. "%")
     end
 
+    -- save if found anything new
+    if storage.index.itemTypesCount() > initialItemTypes then
+        table.insert(storage.index.latestLog, "saving index ...")
+        if storage.index.save() then
+            table.insert(storage.index.latestLog, "saved index successfully.")
+        else
+            table.insert(storage.index.latestLog, "failted to saved index, probably no storage remaining.")
+        end
+    end
+
     storage.index.isIndexed = true
-    table.insert(storage.index.latestLog, "indexing completed.")
+    table.insert(
+        storage.index.latestLog,
+        "indexed " .. storage.index.itemTypesCount() .. " unique items successfully."
+    )
+end
+
+---@type string The path where the index is saved/loaded from.  Basically required for large storage systems as computers reboot when unloaded & reloaded.
+storage.index.savePath = ".indexedDB"
+
+--- Save the current indexed DB so it can be loaded next time.
+---@return boolean -- Whether the save was successful or not
+function storage.index.save()
+    print("[items indexer] saving index to disk ...")
+
+    local file = fs.open(storage.index.savePath, "w+")
+    if not file then
+        print("[items indexer] failed to save index.")
+        return false
+    end
+
+    file.write(textutils.serialise(storage.itemTypes, { allow_repetitions = false, compact = true }))
+    file.close()
+
+    print("[items indexer] saved index to disk.")
+
+    return true
+end
+
+--- Save the current indexed DB so it can be loaded next time.
+---@return boolean -- Whether the save was successful or not
+function storage.index.load()
+    storage.index.isIndexed = false
+    print("[items indexer] loading index from disk ...")
+
+    if not fs.exists(storage.index.savePath) then
+        print("[items indexer] failed to load index: not found.")
+        return false
+    end
+
+    local file = fs.open(storage.index.savePath, "r")
+
+    if not file then
+        print("[items indexer] failed to load index: not sure.")
+        return false
+    end
+
+    storage.itemTypes = textutils.unserialise(file.readAll() or "") or {}
+
+    print("[items indexer] loaded index from disk.")
+
+    file.close()
+    storage.index.isIndexed = true
+    return true
 end
 
 --#endregion

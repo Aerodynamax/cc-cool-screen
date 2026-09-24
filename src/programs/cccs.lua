@@ -36,6 +36,13 @@ function index()
         return
     end
 
+    -- don't waste time if it doesn't need to be wasted
+    if storage.index.load() then
+        screen.reset()
+        screen.clearLineY(screen.height())
+        return
+    end
+
     parallel.waitForAll(
         storage.index.index,
         function()
@@ -98,10 +105,10 @@ parallel.waitForAny(
         sleep(0) -- wait for it to start
         -- wait for initial displayed indexing to happen
         while not storage.index.isIndexed do
-            print("waiting ...")
             sleep(1)
         end
 
+        print("[item indexer] continuous indexing started.")
         -- continuous indexing
         while true do
             sleep(5)
