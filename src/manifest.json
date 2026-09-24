@@ -1,9 +1,9 @@
 {
   "files": {
     "autorun/startup.lua": "e8302f0a168ab16fb285763c35d6ef6c4fe6de4cbf84f999670b80bec5101e04",
-    "apis/sc/storage.lua": "b12a1f397a3bcc550dfba032db725f21a7f9af04661af5e8bf4473407b6047bc",
+    "apis/sc/storage.lua": "3295184155ca52bf2427038d3ca1370a6505fb96d0b5fa476ead7bdff14d5ba2",
     "apis/sc/screen.lua": "d5018d44ff196cc35b6ca85917f240b5e92871ec0f7a1e555a6112ac82edaff0",
-    "programs/cccs.lua": "25b6845f954c73beeebfbf673676df6d46c8d1313a64b3f3a32907a8825eaa73"
+    "programs/cccs.lua": "e3daa290cd81a25f4a189bce2255f7e488185debe7aaefd1cc4818b6404a8cec"
   },
   "dependencies": []
 }
