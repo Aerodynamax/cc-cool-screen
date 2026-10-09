@@ -71,6 +71,7 @@ function mainloop()
     parallel.waitForAll(
         function()
             while true do
+                screen.setCursorLine(1)
                 screen.writeCenter("overview", colors.white, colors.blue, " ")
                 screen.writeRight("" .. os.date("%a %H:%M:%S"), 1, colors.white, colors.blue)
                 sleep(0)
@@ -85,9 +86,9 @@ function mainloop()
             index()
 
             while true do
-                screen.clearLineY(3)
                 screen.writeLeft(
-                    "storage: " .. storage.count() .. "/" .. storage.maxCount() .. " (" .. (storage.percentage()) .. "%)",
+                    "storage: " ..
+                    storage.count() .. "/" .. storage.maxCount() .. " (" .. (storage.percentage()) .. "%)              ",
                     3,
                     colors.white,
                     colors.black
