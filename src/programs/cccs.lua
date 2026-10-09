@@ -14,7 +14,7 @@ local screen = require("sc.screen")
 screen.reset()
 screen.clear()
 -- screen.setTextScale(5)
-screen.writeCenter("screen", colors.white, colors.blue, " ")
+screen.writeCenter("overview", colors.white, colors.blue, " ")
 
 --#region Indexing
 
@@ -71,6 +71,7 @@ function mainloop()
     parallel.waitForAll(
         function()
             while true do
+                screen.writeCenter("overview", colors.white, colors.blue, " ")
                 screen.writeRight("" .. os.date("%a %H:%M:%S"), 1, colors.white, colors.blue)
                 sleep(0)
             end
@@ -84,6 +85,7 @@ function mainloop()
             index()
 
             while true do
+                screen.clearLineY(3)
                 screen.writeLeft(
                     "storage: " .. storage.count() .. "/" .. storage.maxCount() .. " (" .. (storage.percentage()) .. "%)",
                     3,

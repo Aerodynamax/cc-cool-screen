@@ -39,12 +39,12 @@ local storage = chest
 
 --- Safely get detailed information about an item in this inventory.
 ---@param slot integer The slot to get more info about
----@return ItemDetails|nil info Information about the item in the slot or nil if no item is present
+---@return ItemDetailed? info Information about the item in the slot or nil if no item is present
 function storage:getItemDetailSafe(slot)
-    local successful, details = pcall(storage.getItemDetail, slot)
+    local successful, details = pcall(storage.getItemDetail, self, slot)
 
     if successful and details then
-        return { name = details.name, displayName = details.displayName, maxCount = details.maxCount }
+        return details
     else
         return nil
     end
@@ -124,10 +124,23 @@ function storage.indexer.index()
     end
 
     storage.indexer.isIndexed = true
-    table.insert(
-        storage.indexer.latestLog,
-        "indexed " .. storage.itemTypesCount() .. " unique items successfully."
-    )
+    table.insert(storage.indexer.latestLog, "indexed " .. storage.itemTypesCount() .. " unique items successfully.")
+end
+
+--- Index a slot and return the details of that item.  If the slot is already indexed or the slot can't be accessed, returns nil.
+---@param slot number The slot to index
+---@return ItemDetailed? -- The details of the given slot
+function storage.indexer:indexSlot(slot)
+    local details = storage:getItemDetailSafe(slot)
+
+    if details and not storage.indexer.itemTypes[details.name] then
+        storage.indexer.itemTypes[details.name] = {
+            name = details.name,
+            displayName = details.displayName,
+            maxCount = details.maxCount
+        }
+        return details
+    end
 end
 
 ---@type string The path where the index is saved/loaded from.  Basically required for large storage systems as computers reboot when unloaded & reloaded.
@@ -200,24 +213,32 @@ end
 function storage.maxCount()
     local list = storage:list()
     -- offset with the extra bit that doesn't get indexed
-    local count = (storage:size() - #list) * storage.indexer.defaultMaxCount
+    local remainderCount = storage:size()
+
+    local count = 0
 
     for i, item in ipairs(list) do
-        if item ~= nil then
+        if item then
             -- if fast lookups are available, use them
             if storage.indexer.itemTypes[item.name] then
                 count = count + storage.indexer.itemTypes[item.name].maxCount
             else
-                count = count + (storage:getItemDetailSafe(i) or storage.indexer.defaultMaxCount) -- fallback
-                sleep(0)
+                local details = storage.indexer:indexSlot(i)
+                if details then
+                    count = count + (details.maxCount or storage.indexer.defaultMaxCount) -- fallback
+                else
+                    count = count + storage.indexer.defaultMaxCount
+                end
+
+                sleep(0) -- TODO: potentially not needed
             end
         else
             count = count + storage.indexer.defaultMaxCount
         end
+        remainderCount = remainderCount - 1
     end
 
-
-    return count
+    return count + (remainderCount * storage.indexer.defaultMaxCount)
 end
 
 --- Returns the percentage of storage taken up
