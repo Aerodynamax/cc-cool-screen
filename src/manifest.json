@@ -6,7 +6,7 @@
     "apis/sc/multiperiph.lua": "f268569584f5bab3798bcde199f7b831ddd3e1a3364ae1f3251c21d9f56628a7",
     "apis/sc/storage.lua": "dd8df97f7d0f5a2207d2619e522842299655ba40bf582f8742cae9b6936b7568",
     "apis/sc/screen.lua": "d5018d44ff196cc35b6ca85917f240b5e92871ec0f7a1e555a6112ac82edaff0",
-    "programs/cccs.lua": "38c3283fed1925352e9835b2ca89ae4bfb72d2f75dca0e8bf033adb39b9fef8c"
+    "programs/cccs.lua": "eaec8f6ee2231f4ef0cc88841f0b3321f671e08e704c51d39a2947488733d63a"
   },
   "dependencies": []
 }
