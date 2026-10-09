@@ -7,6 +7,10 @@
 			"name": "Computer",
 			"uri": "craftos-pc://0/ghu/ext/Aerodynamax/cc-cool-screen"
 		},
+		{
+			"name": "Test Computer",
+			"uri": "craftos-pc://0/test"
+		}
 	],
 	"settings": {
 		"craftos-pc.additionalArguments": "",

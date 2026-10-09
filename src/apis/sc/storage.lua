@@ -1,12 +1,56 @@
----@type ccTweaked.peripherals.Inventory|any
-local chest = peripheral.find("inventory")
+-- require()
+bigInv = require("fbc.mega_inventory")
 
-if not chest or not peripheral.hasType(chest, "inventory") then
-    return nil
+--- Returns all connected peripherals of the stated type
+---@param peripheralType ccTweaked.peripherals.type|string the type of peripheral to look for
+function peripheral.allOfType(peripheralType)
+    ---@type ccTweaked.peripherals.Command[]
+    ---|ccTweaked.peripherals.Computer[]
+    ---|ccTweaked.peripherals.Drive[]
+    ---|ccTweaked.peripherals.EnergyStorage[]
+    ---|ccTweaked.peripherals.FluidStorage[]
+    ---|ccTweaked.peripherals.Inventory[]
+    ---|ccTweaked.peripherals.Modem[]
+    ---|ccTweaked.peripherals.Monitor[]
+    ---|ccTweaked.peripherals.Printer[]
+    ---|ccTweaked.peripherals.Speaker[]
+    ---|ccTweaked.peripherals.WiredModem[]
+    return peripheral.find(
+        peripheralType,
+        function(name, wrapped)
+            return peripheral.hasType(wrapped, "inventory") or false
+        end
+    )
 end
 
----@class Storage: ccTweaked.peripherals.Inventory
+chest = bigInv.new(peripheral.allOfType("inventory"))
+
+-- ---@type ccTweaked.peripherals.Inventory|any
+-- local chest = peripheral.find("inventory")
+
+if not chest then
+    error("Error loading inventories: did you actually connect the chests to the computer?")
+end
+
+---@class Storage: MegaInventory
 local storage = chest
+
+--#region helpers
+
+--- Safely get detailed information about an item in this inventory.
+---@param slot integer The slot to get more info about
+---@return ItemDetails|nil info Information about the item in the slot or nil if no item is present
+function storage:getItemDetailSafe(slot)
+    local successful, details = pcall(storage.getItemDetail, slot)
+
+    if successful and details then
+        return { name = details.name, displayName = details.displayName, maxCount = details.maxCount }
+    else
+        return nil
+    end
+end
+
+--#endregion
 
 --#region indexing
 
@@ -15,47 +59,47 @@ local storage = chest
 ---@field displayName string The item display name
 ---@field maxCount integer The nax number of this item per slot
 
----@type table<string, ItemDetails>
-storage.itemTypes = {}
-
----@class StorageIndex Functions and values relating to storage indexing (a list of all types of items for fast maxCount lookups & stuff).
-storage.index = {}
+---@class StorageIndexer Functions and values relating to storage indexing (a list of all types of items for fast maxCount lookups & stuff).
+storage.indexer = {}
 
 ---@type integer The default max stack size of an item the indexer hasn't indexed
-storage.index.defaultMaxCount = 64
+storage.indexer.defaultMaxCount = 64
 
 ---@type boolean Whether the storage system has been indexed.  If it is false, you need to run storage.index.index()
-storage.index.isIndexed = false
+storage.indexer.isIndexed = false
 
 ---@type string[] The log of the most recent indexing attempt.  Reset when calling `storage.index.index()`
-storage.index.latestLog = {}
+storage.indexer.latestLog = {}
+
+---@type table<string, ItemDetails> A cache of all item type's details for performance. <br> <br> **TODO: make this store full details, also use name+tags for index**
+storage.indexer.itemTypes = {}
 
 --- Returns the number of unique item types the indexer has stored.
 ---@return integer -- the number of unique item types the indexer has stored
-function storage.index.itemTypesCount()
+function storage.itemTypesCount()
     local count = 0
-    for _ in pairs(storage.itemTypes) do
+    for _ in pairs(storage.indexer.itemTypes) do
         count = count + 1
     end
     return count
 end
 
 -- get item maxes & names
-function storage.index.index()
-    storage.index.isIndexed = false
-    storage.index.latestLog = { "starting indexing ..." }
+function storage.indexer.index()
+    storage.indexer.isIndexed = false
+    storage.indexer.latestLog = { "starting indexing ..." }
 
-    local initialItemTypes = storage.index.itemTypesCount()
+    local initialItemTypes = storage.itemTypesCount()
 
-    local list = storage.list()
+    local list = storage:list()
 
-    for i, item in pairs(list) do
+    for i, item in ipairs(list) do
         -- only update new values
-        if item and not storage.itemTypes[item.name] then
-            local successful, details = pcall(storage.getItemDetail, i)
+        if item and not storage.indexer.itemTypes[item.name] then
+            local details = storage:getItemDetailSafe(i)
 
-            if successful and details then
-                storage.itemTypes[item.name] = {
+            if details then
+                storage.indexer.itemTypes[item.name] = {
                     name = item.name,
                     displayName = details.displayName,
                     maxCount = details.maxCount
@@ -66,41 +110,41 @@ function storage.index.index()
             sleep(0) -- allow keyboard interupts
         end
 
-        table.insert(storage.index.latestLog, "indexing: " .. math.floor((i / #list) * 100) .. "%")
+        table.insert(storage.indexer.latestLog, "indexing: " .. math.floor((i / #list) * 100) .. "%")
     end
 
     -- save if found anything new
-    if storage.index.itemTypesCount() > initialItemTypes then
-        table.insert(storage.index.latestLog, "saving index ...")
-        if storage.index.save() then
-            table.insert(storage.index.latestLog, "saved index successfully.")
+    if storage.itemTypesCount() > initialItemTypes then
+        table.insert(storage.indexer.latestLog, "saving index ...")
+        if storage.indexer.save() then
+            table.insert(storage.indexer.latestLog, "saved index successfully.")
         else
-            table.insert(storage.index.latestLog, "failted to saved index, probably no storage remaining.")
+            table.insert(storage.indexer.latestLog, "failted to saved index, probably no storage remaining.")
         end
     end
 
-    storage.index.isIndexed = true
+    storage.indexer.isIndexed = true
     table.insert(
-        storage.index.latestLog,
-        "indexed " .. storage.index.itemTypesCount() .. " unique items successfully."
+        storage.indexer.latestLog,
+        "indexed " .. storage.itemTypesCount() .. " unique items successfully."
     )
 end
 
 ---@type string The path where the index is saved/loaded from.  Basically required for large storage systems as computers reboot when unloaded & reloaded.
-storage.index.savePath = ".indexedDB"
+storage.indexer.savePath = ".indexedDB"
 
 --- Save the current indexed DB so it can be loaded next time.
 ---@return boolean -- Whether the save was successful or not
-function storage.index.save()
+function storage.indexer.save()
     print("[items indexer] saving index to disk ...")
 
-    local file = fs.open(storage.index.savePath, "w+")
+    local file = fs.open(storage.indexer.savePath, "w+")
     if not file then
         print("[items indexer] failed to save index.")
         return false
     end
 
-    file.write(textutils.serialise(storage.itemTypes, { allow_repetitions = false, compact = true }))
+    file.write(textutils.serialise(storage.indexer.itemTypes, { allow_repetitions = false, compact = true }))
     file.close()
 
     print("[items indexer] saved index to disk.")
@@ -110,28 +154,28 @@ end
 
 --- Save the current indexed DB so it can be loaded next time.
 ---@return boolean -- Whether the save was successful or not
-function storage.index.load()
-    storage.index.isIndexed = false
+function storage.indexer.load()
+    storage.indexer.isIndexed = false
     print("[items indexer] loading index from disk ...")
 
-    if not fs.exists(storage.index.savePath) then
+    if not fs.exists(storage.indexer.savePath) then
         print("[items indexer] failed to load index: not found.")
         return false
     end
 
-    local file = fs.open(storage.index.savePath, "r")
+    local file = fs.open(storage.indexer.savePath, "r")
 
     if not file then
         print("[items indexer] failed to load index: not sure.")
         return false
     end
 
-    storage.itemTypes = textutils.unserialise(file.readAll() or "") or {}
+    storage.indexer.itemTypes = textutils.unserialise(file.readAll() or "") or {}
 
-    print("[items indexer] loaded index from disk.")
+    print("[items indexer] loaded " .. storage.itemTypesCount() .. " items into index.")
 
     file.close()
-    storage.index.isIndexed = true
+    storage.indexer.isIndexed = true
     return true
 end
 
@@ -142,7 +186,7 @@ end
 function storage.count()
     local count = 0
 
-    for i, item in pairs(storage.list()) do
+    for i, item in ipairs(storage:list()) do
         if item ~= nil and item.count ~= nil then
             count = count + item.count
         end
@@ -154,25 +198,21 @@ end
 --- Returns the maximum number of items the inventory can hold.
 ---@return integer -- The maximum number of items the inventory can hold
 function storage.maxCount()
+    local list = storage:list()
     -- offset with the extra bit that doesn't get indexed
-    local count = (storage.size() - #storage.list()) * storage.index.defaultMaxCount
+    local count = (storage:size() - #list) * storage.indexer.defaultMaxCount
 
-    for i, item in pairs(storage.list()) do
+    for i, item in ipairs(list) do
         if item ~= nil then
             -- if fast lookups are available, use them
-            if storage.itemTypes[item.name] then
-                count = count + storage.itemTypes[item.name].maxCount
+            if storage.indexer.itemTypes[item.name] then
+                count = count + storage.indexer.itemTypes[item.name].maxCount
             else
-                success, details = pcall(storage.getItemDetail, i) -- safely get details
-                if success then
-                    count = count + details.maxCount
-                else
-                    count = count + storage.index.defaultMaxCount -- fallback
-                end
-                sleep(0)                                          -- yield
+                count = count + (storage:getItemDetailSafe(i) or storage.indexer.defaultMaxCount) -- fallback
+                sleep(0)
             end
         else
-            count = count + storage.index.defaultMaxCount
+            count = count + storage.indexer.defaultMaxCount
         end
     end
 
@@ -183,7 +223,7 @@ end
 --- Returns the percentage of storage taken up
 ---@return integer
 function storage.percentage()
-    return math.floor((storage.count() / storage.maxCount()) * 100)
+    return math.floor((storage:count() / storage.maxCount()) * 100)
 end
 
 return storage
