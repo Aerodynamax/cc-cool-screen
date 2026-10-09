@@ -1,0 +1,1 @@
+local a={peripheral.find("inventory",function(b,c)return peripheral.hasType(c,"inventory")or false end)}for d,e in pairs(a)do print("Size: "..e.size())end;function Account:new(f)f=f or{}setmetatable(f,self)self.__index=self;return f end
