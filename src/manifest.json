@@ -4,9 +4,9 @@
     "apis/fbc/mega_inventory.lua": "f9108146571918174e9b16cc79e5e7b7239a09ff451adb67422e24953064b92c",
     "apis/fbc/parallelism_handler.lua": "a6cb9de001c0d16c44931ff942bf6b1bc4ef79e238bc8c41b60b5bc85349bd94",
     "apis/sc/multiperiph.lua": "f268569584f5bab3798bcde199f7b831ddd3e1a3364ae1f3251c21d9f56628a7",
-    "apis/sc/storage.lua": "7b57d93298e202ff29fbbb2b0e70f14a3378b4c8783c0e94f72082e93c16a63f",
+    "apis/sc/storage.lua": "dd8df97f7d0f5a2207d2619e522842299655ba40bf582f8742cae9b6936b7568",
     "apis/sc/screen.lua": "d5018d44ff196cc35b6ca85917f240b5e92871ec0f7a1e555a6112ac82edaff0",
-    "programs/cccs.lua": "e22f647278235c8bfb1add1a09676031d4589a7a00723465129a17c36d9703b0"
+    "programs/cccs.lua": "38c3283fed1925352e9835b2ca89ae4bfb72d2f75dca0e8bf033adb39b9fef8c"
   },
   "dependencies": []
 }
